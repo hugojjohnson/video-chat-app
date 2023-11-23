@@ -1,13 +1,15 @@
 const socket = io("/"); // Our server is set up at the root path
 const videoGrid = document.getElementById("video-grid");
-const myVideo = document.createElement("video");
-myVideo.muted = true; // to stop feedback.
-const peers = {};
 
 const myPeer = new Peer(undefined, {
     host: "/",
     port: "3001"
 });
+
+const myVideo = document.createElement("video");
+myVideo.muted = true; // to stop feedback.
+const peers = {};
+
 
 navigator.mediaDevices.getUserMedia({
     video: true,
@@ -40,9 +42,6 @@ myPeer.on("open", id => {
 })
 
 
-socket.on("user-connected", userId => {
-    console.log("User connected: " + userId);
-});
 
 function addVideoStream(video, stream) {
     video.srcObject = stream;
@@ -53,7 +52,7 @@ function addVideoStream(video, stream) {
     videoGrid.append(video);
 }
 
-function connectToNewUser (videoId, stream) {
+function connectToNewUser (userId, stream) {
     const call = myPeer.call(userId, stream);
     const video = document.createElement("video");
     call.on("stream", userVideoStream => {
